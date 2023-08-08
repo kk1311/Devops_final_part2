@@ -7,12 +7,25 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                // Your build steps here
+                script {
+                    // Build Docker image using nginx as the base image
+                    docker.build("devops_final:${env.BUILD_NUMBER}", '-f Dockerfile .')
+                }
             }
         }
-        // Additional stages as needed
+        stage('Publish Docker Image') {
+            steps {
+                script {
+                    // Authenticate with Docker Hub using credentials
+                    docker.withRegistry('https://index.docker.io/v1/', 'dckr_pat_JVpfIwq6PwUTKUIMH4pF1Yk95W4') {
+                        // Push the Docker image to Docker Hub
+                        docker.image("devops_final:${env.BUILD_NUMBER}").push()
+                    }
+                }
+            }
+        }
     }
 }
 
