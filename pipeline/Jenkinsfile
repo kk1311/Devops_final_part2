@@ -10,7 +10,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image using nginx as the base image
+                    // Build Docker image using Dockerfile
                     docker.build("devops_final:${env.BUILD_NUMBER}", '-f Dockerfile .')
                 }
             }
